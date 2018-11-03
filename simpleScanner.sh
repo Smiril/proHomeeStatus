@@ -12,7 +12,7 @@
 # -------------------------
 # Einstellungen (edit here)
 # -------------------------
-away=15 	# nach wieviel checkback Durchläufen Status "abwesend"?
+away=4 	# nach wieviel checkback Durchläufen Status "abwesend"?
 TAGS=("7A:55:6C:0B:A5:D0" "6C:B0:B1:B3:C0:0F") # G-tags mac Adresses
 NAMES=("ONE" "TWO") #namen für devices
 # ----------------------
@@ -48,16 +48,13 @@ while true; do
     NUMOFLINES=$(grep -f scan.txt -E "scan.txt")
     if [ "$NUMOFLINES" == ${TAGS[a]} ]; then
 		# Anwesend
-        for h in ${TAGS[*]}; do
 		if [ "$daheim" -eq 0 ]; then
 			echo "Status: anwesend ${NAMES[a]}"	
 			daheim=1
 		fi
 		ncounter=1
-		done
     elif [ "$NUMOFLINES" != ${TAGS[a]} ]; then
 		# Abwesend
-        for h in ${TAGS[*]}; do
 		if [ "$ncounter" -lt "$away" ]; then
 			echo "Counter Abwesend: " $ncounter
 		fi
@@ -68,7 +65,6 @@ while true; do
 			ncounter=0
 		fi
 		ncounter=$[ncounter+ 1]
-        done
     else
         echo "noop"
     fi
