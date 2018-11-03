@@ -13,7 +13,8 @@
 # Einstellungen (edit here)
 # -------------------------
 away=15 	# nach wieviel checkback Durchläufen Status "abwesend"?
-TAGS=("7C:2F:80:90:22:22" "7C:2F:80:90:33:55") # G-tags mac Adresses
+TAGS=("7A:55:6C:0B:A5:D0" "6C:B0:B1:B3:C0:0F") # G-tags mac Adresses
+NAMES=("ONE" "TWO") #namen für devices
 # ----------------------
 # do not edit below here 
 # ----------------------
@@ -43,18 +44,18 @@ done
 echo ""
 while true; do
     sudo hcitool lescan --whitelist | grep -v "LE Scan ..." > scan.txt & sleep 2 && sudo pkill --signal SIGINT hcito   
-    for a in ${TAGS[*]}; do
+    for a in ${!TAGS[*]}; do
     NUMOFLINES=$(grep -f scan.txt -E "scan.txt")
-    if [ "$NUMOFLINES" == a ]; then
+    if [ "$NUMOFLINES" == ${TAGS[a]} ]; then
 		# Anwesend
         for h in ${TAGS[*]}; do
 		if [ "$daheim" -eq 0 ]; then
-			echo "Status: anwesend $h"	
+			echo "Status: anwesend ${NAMES[a]}"	
 			daheim=1
 		fi
 		ncounter=1
 		done
-    elif [ "$NUMOFLINES" != a ]; then
+    elif [ "$NUMOFLINES" != ${TAGS[a]} ]; then
 		# Abwesend
         for h in ${TAGS[*]}; do
 		if [ "$ncounter" -lt "$away" ]; then
@@ -62,7 +63,7 @@ while true; do
 		fi
 		
 		if [ "$ncounter" == "$away" ]; then
-			echo "Status: abwesend $h"
+			echo "Status: abwesend ${NAMES[a]}"
 			daheim=0    
 			ncounter=0
 		fi
